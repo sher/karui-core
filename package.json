@@ -3,7 +3,12 @@
     "version": "0.0.1",
     "main": "index.js",
     "author": "tundrax <sherzod@gmail.com>",
+    "private": false,
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/tundrax/karui-core.git"
+    },
     "scripts": {
         "dev": "node scripts/dev.js"
     },
