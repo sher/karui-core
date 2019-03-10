@@ -15,7 +15,7 @@ const RenderContext = require('./RenderContext');
  * @param {Hapi.Server} server
  * @param {} config Karui configuration object
  */
-async function register(server, config) {
+async function register(server, { staticPath }) {
     const render = function(Component, props) {
         const RenderContextProvider = React.createElement(
             RenderContext.Provider,
@@ -31,9 +31,9 @@ async function register(server, config) {
         return this.response(html);
     };
 
-    if (config && config.app.widgetsPath && config.app.staticPath) {
+    if (staticPath) {
         server.plugins['react'] = {
-            assets: require(path.join(config.app.staticPath, 'assets.json')),
+            assets: require(path.join(staticPath, 'assets.json')),
         };
     }
 
