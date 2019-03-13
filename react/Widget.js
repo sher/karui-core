@@ -4,20 +4,12 @@ const { Helmet } = require('react-helmet');
 const RenderContext = require('./RenderContext');
 module.exports = Widget;
 
-function Widget({ name, id = 0, initialState }) {
+function Widget({ id = 0, name, component, initialProps }) {
     const { request } = React.useContext(RenderContext);
     const assets = request.server.plugins.react.assets;
     const namespace = assets.namespace;
     const files = assets.widgets[name];
-    if (!files) return null;
-
-    if (initialState) {
-        try {
-            initialState = JSON.stringify(initialState);
-        } catch (err) {
-            console.error(`Failed to parse asset [${name}] initial state`, err);
-        }
-    }
+    // files may be empty, because wrong name or other compilation error
 
     let parsedId;
 
@@ -32,6 +24,16 @@ function Widget({ name, id = 0, initialState }) {
         console.error(err);
     } finally {
         id = parsedId;
+    }
+
+    let stringifiedInitialProps;
+
+    if (initialProps) {
+        try {
+            stringifiedInitialProps = JSON.stringify(initialProps);
+        } catch (err) {
+            console.error(`Failed to parse asset [${name}] initial state`, err);
+        }
     }
 
     return React.createElement(
@@ -64,15 +66,16 @@ function Widget({ name, id = 0, initialState }) {
             {
                 'data-widget-name': name,
                 'data-widget-id': id,
-                'data-widget-initial-state': initialState,
+                'data-widget-initial-props': stringifiedInitialProps,
             },
-            React.createElement('script', null, `${namespace}.${name}?${namespace}.${name}.default?${namespace}.${name}.default(${id}):undefined:undefined`)
-        )
+            React.createElement(component, { ...initialProps })
+        ),
+        React.createElement('script', null, `${namespace}.${name}?${namespace}.${name}.default?${namespace}.${name}.default(${id}):undefined:undefined`)
     );
 }
 
 Widget.propTypes = {
+    id: PropTypes.number,
     name: PropTypes.string.isRequired,
-    id: PropTypes.string,
-    initialState: PropTypes.object,
+    initialProps: PropTypes.object,
 };

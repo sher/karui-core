@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default function render(widgetName, widgetId = 0, widgetComponent) {
+export default function hydrate(widgetName, widgetId = 0, widgetComponent) {
     let selector = `[data-widget-name="${widgetName}"]`;
     
     // FIX: Multiple widget usage turned OFF here.
@@ -30,6 +30,6 @@ export default function render(widgetName, widgetId = 0, widgetComponent) {
         }
 
         const element = React.createElement(widgetComponent, { ...parsedInitialProps });
-        ReactDOM.render(element, container);
+        ReactDOM.hydrate(element, container);
     }
 }

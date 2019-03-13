@@ -23,7 +23,7 @@ async function register(server, { staticPath }) {
             React.createElement(Component.default || Component, props)
         );
 
-        const content = ReactDOMServer.renderToStaticMarkup(RenderContextProvider);
+        const content = ReactDOMServer.renderToString(RenderContextProvider);
         const helmet = Helmet.renderStatic();
 
         let html = `<!doctype html><html ${helmet.htmlAttributes.toString()}><head>${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}${helmet.style.toString()}${helmet.script.toString()}</head><body ${helmet.bodyAttributes.toString()}>${content}</body></html>`;
