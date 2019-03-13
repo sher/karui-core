@@ -19,17 +19,17 @@ export default function render(widgetName, widgetId = 0, widgetComponent) {
 
     for (let i = 0; i < containers.length; i++) {
         const container = containers[i];
-        const initialState = container.dataset.widgetInitialState || '{}';
+        const initialProps = container.dataset.widgetInitialProps || '{}';
         
-        let parsedInitialState;
+        let parsedInitialProps;
 
         try {
-            parsedInitialState = JSON.parse(initialState);
+            parsedInitialProps = JSON.parse(initialProps);
         } catch (error) {
-            parsedInitialState = {};
+            parsedInitialProps = {};
         }
 
-        const element = React.createElement(widgetComponent, { ...parsedInitialState });
+        const element = React.createElement(widgetComponent, { ...parsedInitialProps });
         ReactDOM.render(element, container);
     }
 }

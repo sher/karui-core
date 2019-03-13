@@ -4,18 +4,18 @@ const { Helmet } = require('react-helmet');
 const RenderContext = require('./RenderContext');
 module.exports = Widget;
 
-function Widget({ name, id = 0, initialState }) {
+function Widget({ name, id = 0, initialProps }) {
     const { request } = React.useContext(RenderContext);
     const assets = request.server.plugins.react.assets;
     const namespace = assets.namespace;
     const files = assets.widgets[name];
     if (!files) return null;
 
-    if (initialState) {
+    if (initialProps) {
         try {
-            initialState = JSON.stringify(initialState);
+            initialProps = JSON.stringify(initialProps);
         } catch (err) {
-            console.error(`Failed to parse asset [${name}] initial state`, err);
+            console.error(`Failed to parse asset [${name}] initial props`, err);
         }
     }
 
@@ -64,7 +64,7 @@ function Widget({ name, id = 0, initialState }) {
             {
                 'data-widget-name': name,
                 'data-widget-id': id,
-                'data-widget-initial-state': initialState,
+                'data-widget-initial-props': initialProps,
             },
             React.createElement('script', null, `${namespace}.${name}?${namespace}.${name}.default?${namespace}.${name}.default(${id}):undefined:undefined`)
         )
@@ -74,5 +74,5 @@ function Widget({ name, id = 0, initialState }) {
 Widget.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.string,
-    initialState: PropTypes.object,
+    initialProps: PropTypes.object,
 };
