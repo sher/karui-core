@@ -28,7 +28,7 @@ async function register(server, { staticPath }) {
 
         let html = `<!doctype html><html ${helmet.htmlAttributes.toString()}><head>${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}${helmet.style.toString()}${helmet.script.toString()}</head><body ${helmet.bodyAttributes.toString()}>${content}</body></html>`;
 
-        return this.response(html);
+        return this.response(html).takeover();
     };
 
     if (staticPath) {
