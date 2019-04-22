@@ -34,6 +34,8 @@ function Widget({ name, id = 0, initialProps }) {
         id = parsedId;
     }
 
+    const dangerousWidgetInitString = `${namespace}['${name}']?${namespace}['${name}'].default?${namespace}['${name}'].default(${id}):undefined:undefined`;
+
     return React.createElement(
         React.Fragment,
         null,
@@ -66,7 +68,11 @@ function Widget({ name, id = 0, initialProps }) {
                 'data-widget-id': id,
                 'data-widget-initial-props': initialProps,
             },
-            React.createElement('script', null, `${namespace}.${name}?${namespace}.${name}.default?${namespace}.${name}.default(${id}):undefined:undefined`)
+            React.createElement('script', {
+                dangerouslySetInnerHTML: {
+                    __html: dangerousWidgetInitString,
+                },
+            })
         )
     );
 }
