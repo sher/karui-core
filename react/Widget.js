@@ -4,6 +4,9 @@ const { Helmet } = require('react-helmet');
 const RenderContext = require('./RenderContext');
 module.exports = Widget;
 
+const scripts = [];
+const styles = [];
+
 function Widget({ name, id = 0, initialProps }) {
     const { request } = React.useContext(RenderContext);
     const assets = request.server.plugins.react.assets;
@@ -34,6 +37,9 @@ function Widget({ name, id = 0, initialProps }) {
         id = parsedId;
     }
 
+    const head = Helmet.peek();
+    const styles = head.link.toComponent().filter(link => link.props.rel === 'stylesheet').map(link => link.href);
+    const scripts = head.script.toComponent().map(script => script.props.src);
     const dangerousWidgetInitString = `${namespace}['${name}']?${namespace}['${name}'].default?${namespace}['${name}'].default(${id}):undefined:undefined`;
 
     return React.createElement(
@@ -44,22 +50,24 @@ function Widget({ name, id = 0, initialProps }) {
             null,
             files
                 .filter(file => /\.css$/.test(file.name))
-                .map((file, i) =>
-                    React.createElement('link', {
-                        key: i,
+                .filter(file => styles.indexOf(file.path) === -1)
+                .map(file => {
+                    return React.createElement('link', {
+                        key: file.path,
                         rel: 'stylesheet',
                         href: file.path,
-                    })
-                ),
+                    });
+                }),
             files
                 .filter(file => /\.js$/.test(file.name))
-                .map((file, i) =>
-                    React.createElement('script', {
-                        key: i,
+                .filter(file => scripts.indexOf(file.path) === -1)
+                .map(file => {
+                    return React.createElement('script', {
+                        key: file.path,
                         src: file.path,
                         rel: 'preload',
-                    })
-                )
+                    });
+                }),
         ),
         React.createElement(
             'div',
@@ -68,6 +76,16 @@ function Widget({ name, id = 0, initialProps }) {
                 'data-widget-id': id,
                 'data-widget-initial-props': initialProps,
             },
+            // files
+            //     .filter(file => /\.js$/.test(file.name))
+            //     .filter(file => file.isEntry)
+            //     .map(file => {
+            //         return React.createElement('script', {
+            //             key: file.path,
+            //             src: file.path,
+            //             rel: 'preload',
+            //         });
+            //     }),
             React.createElement('script', {
                 dangerouslySetInnerHTML: {
                     __html: dangerousWidgetInitString,
