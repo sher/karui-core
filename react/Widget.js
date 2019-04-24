@@ -76,16 +76,6 @@ function Widget({ name, id = 0, initialProps }) {
                 'data-widget-id': id,
                 'data-widget-initial-props': initialProps,
             },
-            // files
-            //     .filter(file => /\.js$/.test(file.name))
-            //     .filter(file => file.isEntry)
-            //     .map(file => {
-            //         return React.createElement('script', {
-            //             key: file.path,
-            //             src: file.path,
-            //             rel: 'preload',
-            //         });
-            //     }),
             React.createElement('script', {
                 dangerouslySetInnerHTML: {
                     __html: dangerousWidgetInitString,
