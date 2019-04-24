@@ -4,9 +4,6 @@ const { Helmet } = require('react-helmet');
 const RenderContext = require('./RenderContext');
 module.exports = Widget;
 
-const scripts = [];
-const styles = [];
-
 function Widget({ name, id = 0, initialProps }) {
     const { request } = React.useContext(RenderContext);
     const assets = request.server.plugins.react.assets;
